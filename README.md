@@ -1,7 +1,7 @@
 # Deep Learning for Human Activity Recognition
 
 <h3>Synopsis</h3>
-In this repository a collection of deep learning networks (such as Convolutional Neural Networks (CNNs or Covnets), Deep Feed Forward Neural Networs, also known as Multilayer Perceprtons (DNNs or MLPs), Recurrent Neural Networks (RNNs), specifically two flavors called Long Short Term Memory RNN (LSTM-RNN) and Bi-Directional LSTM RNNs (ie Bd-LSTM)) will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
+In this repository a collection of deep learning networks (such as Convolutional Neural Networks -CNNs or Covnets-, Deep Feed Forward Neural Networs, also known as Multilayer Perceprtons -DNNs or MLPs-, Recurrent Neural Networks -RNNs-, specifically two flavors called Feed Forward Long Short Term Memory RNN -FFLSTM-RNN- and Bi-Directional LSTM RNNs i.e. -BDLSTM-) will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
 
 The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets with state of the art deep learning approaches.
@@ -29,7 +29,7 @@ The main structure that we are going to follow is this:
 |----->bdlstm  
 
 <h3>Motivation</h3>
-The motivation of creation of this repository was my MSc thesis project.
+The motivation for the creation of this repository lies with my MSc thesis project.
 
 <h3>Installation</h3>
 
@@ -42,10 +42,10 @@ Its main purpose is to read a dataset and save it in a special file format known
 in our main code we could extract the training and testing set of every different dataset just by changing the path and not anything else in the code. More datasets can be added by implementing additional if conditions inside the datareader.py  .
 
 The datasets that we are preprocessing are the following :  
-<ul>Opportunity</ul> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/opportunity+activity+recognition)  
-<ul>Daphnet Gait</ul> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/Daphnet+Freezing+of+Gait)  
-<ul>PAMAP2</ul> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/PAMAP2+Physical+Activity+Monitoring)  
-<ul>Sphere</ul> dataset (it can be downloaded from : https://data.bris.ac.uk/data/dataset/8gccwpx47rav19vk8x4xapcog)  
+<u>Opportunity</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/opportunity+activity+recognition)  
+<u>Daphnet Gait</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/Daphnet+Freezing+of+Gait)  
+<u>PAMAP2</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/PAMAP2+Physical+Activity+Monitoring)  
+<u>Sphere</u> dataset (it can be downloaded from : https://data.bris.ac.uk/data/dataset/8gccwpx47rav19vk8x4xapcog)  
 
 The way to do that is by downloading the dataset from the links provided above, adding the datareader.py script inside their
 folder and running the command in a terminal:  
