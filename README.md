@@ -33,7 +33,7 @@ The motivation of creation of this repository was my MSc thesis project.
 
 <h3>Installation</h3>
 
-Below is a small description of the process the practitioner should follow in order to run the code provided or further extend it to his/her own purposes.  
+Below is a small description of the process the practitioner should follow in order to run the code provided or further extend it to suit his/her own purposes.  
 
 <b>PREPROSSES DATASETS STAGE</b>
 
