@@ -48,18 +48,19 @@ PAMAP2 dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datas
 Sphere dataset (it can be downloaded from : https://data.bris.ac.uk/data/dataset/8gccwpx47rav19vk8x4xapcog)  
 
 The way to do that is by downloading the dataset from the links provided above, adding the datareader.py script inside their
-folder and running the command:
-$python datareader.py <dataset-three-first-initial-letters>
-e.g. for Daphnet gait you would have to type :$python datareader.py dap
+folder and running the command in a terminal:  
+<pre><i>python datareader.py (dataset-three-first-initial-letters)</i></pre>  
+e.g. for Daphnet gait you would have to type:  
+<pre><i>python datareader.py dap</i></pre>
 
-After this stage is complete, a file named daphnet.hdf5 will have been created containing the training and testing sets that were decided to be used for this dataset in the datareader.py (Note: the training-test split we follow for the Opportunity, Daphnet and PAMAP2 datasets are described in Deep, Convolutional, and Recurrent Models for Human Activity Recognition using Wearables, by Nils Y. Hammerla, Shane Halloran, Thomas Ploetz. The split for the Sphere dataset is already created for us in its hosting site.)  
+After this stage is complete, a file named daphnet.h5 will have been created containing the training and testing sets that were decided to be used for this dataset in the datareader.py (Note: the training-test split we follow for the Opportunity, Daphnet and PAMAP2 datasets are described in Deep, Convolutional, and Recurrent Models for Human Activity Recognition using Wearables, by Nils Y. Hammerla, Shane Halloran, Thomas Ploetz (https://arxiv.org/abs/1604.08880). The split for the Sphere dataset is already created for us in its hosting site.)  
 We can later on call the the dataset in our code by fixing the correct path in the line calling the os python function.
-e.g. : path = os.path.join(os.path.expanduser('~'), 'Downloads', 'OpportunityUCIDataset', 'opportunity.h5')  
+e.g. :  
+<pre><i>path = os.path.join(os.path.expanduser('~'), 'Downloads', 'OpportunityUCIDataset', 'opportunity.h5')</i></pre>    
 Note: This path function works both for windows and linux.
 The datasets are all retrieved by simply typing :  
-
 <pre><i>
-f = h5py.File(path, 'r')
+f = h5py.File(path, 'r')  
 x_train = f.get('train').get('inputs')[()]
 y_train = f.get('train').get('targets')[()]
 x_test = f.get('test').get('inputs')[()]
