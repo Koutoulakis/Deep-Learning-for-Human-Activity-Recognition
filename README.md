@@ -29,7 +29,7 @@ The main structure that we are going to follow is this:
 |----->bdlstm  
 
 <h3>Motivation</h3>
-The motivation for the creation of this repository lies with my MSc thesis project.
+The motivation for the creation of this repository lies in my MSc thesis project.
 
 <h3>Installation</h3>
 
