@@ -42,10 +42,10 @@ Its main purpose is to read a dataset and save it in a special file format known
 in our main code we could extract the training and testing set of every different dataset just by changing the path and not anything else in the code. More datasets can be added by implementing additional if conditions inside the datareader.py  .
 
 The datasets that we are preprocessing are the following :  
-<u>Opportunity</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/opportunity+activity+recognition)  
-<u>Daphnet Gait</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/Daphnet+Freezing+of+Gait)  
-<u>PAMAP2</u> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/PAMAP2+Physical+Activity+Monitoring)  
-<u>Sphere</u> dataset (it can be downloaded from : https://data.bris.ac.uk/data/dataset/8gccwpx47rav19vk8x4xapcog)  
+<i>Opportunity</i> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/opportunity+activity+recognition)  
+<i>Daphnet Gait</i> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/Daphnet+Freezing+of+Gait)  
+<i>PAMAP2</i> dataset (it can be downloaded from : https://archive.ics.uci.edu/ml/datasets/PAMAP2+Physical+Activity+Monitoring)  
+<i>Sphere</i> dataset (it can be downloaded from : https://data.bris.ac.uk/data/dataset/8gccwpx47rav19vk8x4xapcog)  
 
 The way to do that is by downloading the dataset from the links provided above, adding the datareader.py script inside their
 folder and running the command in a terminal:  
