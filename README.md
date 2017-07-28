@@ -4,7 +4,7 @@
 In this repository a collection of deep learning networks will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
 
-The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets with state of the art deep learning models.
+The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets with state of the art deep learning approaches.
 
 <h3>Repository Structure</h3>
 
@@ -58,7 +58,7 @@ We can later on call the the dataset in our code by fixing the correct path in t
 e.g. :  
 <pre><i>path = os.path.join(os.path.expanduser('~'), 'Downloads', 'OpportunityUCIDataset', 'opportunity.h5')</i></pre>    
 Note: This path function works both for windows and linux.
-The datasets are all retrieved by simply typing :  
+The correct dataset with its train-test split is retrieved by simply typing :
 <pre><i>
 f = h5py.File(path, 'r')  
 x_train = f.get('train').get('inputs')[()]
@@ -66,3 +66,17 @@ y_train = f.get('train').get('targets')[()]
 x_test = f.get('test').get('inputs')[()]
 y_test = f.get('test').get('targets')[()]
 </i></pre>
+
+At this point you can run the code contained inside the ModelCreation folder to train a model.
+This can be done by going inside a specifc model's folder (e.g. CNN) and typing the following command :
+<pre><i>python (executable) (three first letters of the dataset)  
+e.g. python cnn1d.py dap
+</i></pre>
+
+...or you can retrieve the f1-score / f-weighted and f-mean score of your test-set by using the already trained models inside the
+trainedModels folder by typing:
+<pre><i>I HAVENT DONE THIS PART YET</i></pre>
+
+<h3>Model and basic functions description</h3>
+
+Write stuff here
