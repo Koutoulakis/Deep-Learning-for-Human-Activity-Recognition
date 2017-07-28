@@ -1,6 +1,6 @@
 # Deep Learning for Human Activity Recognition
 
-<b>Synopsis</b>
+<h3>Synopsis</h3>
 In this repository a collection of deep learning networks will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
 
