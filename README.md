@@ -7,39 +7,23 @@ The goal is to provide the public with a sequence of functions and files that wo
 
 The main structure that we are going to follow is this:
 
-|Datareader
-
-|---->datareader.py
-
-|ModelCreation
-
-|----->|CNN
-
-|      |---->cnn1d.py
-
-|----->|DNN
-
-|      |---->mlp.py
-
-|----->|RNN
-
-|      |---->|FFLSTM
-
-|      |     |---->fflstm.py
-
-|      |---->|BDLSTM
-
-|            |---->bdlstm.py
-
-|TrainedModels
-
-|----->cnn
-
-|----->mlp
-
-|----->fflstm
-
-|----->bdlstm
+|Datareader  
+|---->datareader.py  
+|ModelCreation  
+|----->|CNN  
+|      |---->cnn1d.py  
+|----->|DNN  
+|      |---->mlp.py  
+|----->|RNN  
+|      |---->|FFLSTM  
+|      |     |---->fflstm.py  
+|      |---->|BDLSTM  
+|            |---->bdlstm.py  
+|TrainedModels  
+|----->cnn  
+|----->mlp  
+|----->fflstm  
+|----->bdlstm  
 
 #PREPROSSES DATASETS STAGE
 
