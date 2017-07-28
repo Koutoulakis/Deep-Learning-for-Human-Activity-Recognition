@@ -2,26 +2,43 @@
 
 In this repository a collection of deep learning networks will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
+
 The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets.
 
 The main structure that we are going to follow is this:
 
 |Datareader
+
 |---->datareader.py
+
 |ModelCreation
+
 |----->|CNN
+
 |      |---->cnn1d.py
+
 |----->|DNN
+
 |      |---->mlp.py
+
 |----->|RNN
+
 |      |---->|FFLSTM
+
 |      |     |---->fflstm.py
+
 |      |---->|BDLSTM
+
 |            |---->bdlstm.py
+
 |TrainedModels
+
 |----->cnn
+
 |----->mlp
+
 |----->fflstm
+
 |----->bdlstm
 
 #PREPROSSES DATASETS STAGE
