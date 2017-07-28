@@ -77,6 +77,17 @@ e.g.In order to train Daphnet Gait with a CNN you would have to type:
 trainedModels folder by typing:
 <pre><i>I HAVENT DONE THIS PART YET</i></pre>
 
-<h3>Model and basic functions description</h3>
+<h3>Models and basic functions description</h3>
 
-Write stuff here
+<b>Models</b>
+Initially, in all the following models except from the DNN-MLP, we use the datasets as is, and we split them in 1-5 second window segments as described in https://arxiv.org/abs/1604.08880 with 50% overlap. For the DNN, we flatten the input. E.g. if we have a dataset with 3 measurements x,y,z that contains 1000 samples and has a window size of 23 (ie 23 consecutive measurements, which, depending on the frequency of the measurements, it corresponds to 1-5 seconds of activity), the input dimension for the network will not be (1000,23,3) but it will be (1000,23*3) with the x,y,z having the formation x1,x2,..x23,y1,y2,..y23,z1,z2,...z23. 
+<ol>
+<li>Deep Feed Forward Neural Network - Multilayer Perceptron (DNN,MLP)</li>  
+A short description of this network is given here: https://en.wikipedia.org/wiki/Feedforward_neural_network
+The size of each layer depends on the dataset we use as an input, the smaller datasets contain fewer hidden layers, with fewer neurons each. The goal was to replicate similar f-scores for the 3 datasets (Opportunity, Pamap2, Daphnet Gait) with the paper described here () so that we can examine the performance of these networks on the Sphere dataset and do some parameter and optimization function exploration.  
+There is a an if-else section in each algorithm which changes the parameters depending on which dataset (dap,opp,pam,sph) is given. In case another dataset name or a name is not given, it returns an error code. This part of the code could be changed as to include an additional dataset with different parameter configurations.
+
+<li>Convolutional Neural Network (CNN)</li>
+<li>Long Short Term Memory Recurrent Neural Network (LSTM-RNN)</li>
+<li>Bi-Directional Long Short Term Memory Recurrent Neural Network (BD-LSTM-RNN)</li>
+</ol>
