@@ -35,7 +35,7 @@ The motivation for the creation of this repository lies in my MSc thesis project
 
 Below is a small description of the process the practitioner should follow in order to run the code provided or further extend it to suit his/her own purposes.  
 
-<b>PREPROSSES DATASETS STAGE</b>
+<b>PREPROCESS DATASETS STAGE</b>
 
 The Datareader folder contains a python script that follows the logic of this github repository : https://github.com/nhammerla/deepHAR  
 Its main purpose is to read a dataset and save it in a special file format known as hdf5 (https://support.hdfgroup.org/HDF5/), so that
