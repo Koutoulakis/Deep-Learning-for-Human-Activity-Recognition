@@ -1,7 +1,7 @@
 # Deep Learning for Human Activity Recognition
 
 <h3>Synopsis</h3>
-In this repository a collection of deep learning networks will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
+In this repository a collection of deep learning networks (such as Convolutional Neural Networks (CNNs or Covnets), Deep Feed Forward Neural Networs, also known as Multilayer Perceprtons (DNNs or MLPs), Recurrent Neural Networks (RNNs), specifically two flavors called Long Short Term Memory RNN (LSTM-RNN) and Bi-Directional LSTM RNNs (ie Bd-LSTM)) will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
 
 The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets with state of the art deep learning approaches.
