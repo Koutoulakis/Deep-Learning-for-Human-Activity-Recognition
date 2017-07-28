@@ -60,7 +60,7 @@ e.g. :
 Note: This path function works both for windows and linux.
 The correct dataset with its train-test split is retrieved by simply typing :
 <pre><i>
-f = h5py.File(path, 'r')  
+f = h5py.File(path, 'r')
 x_train = f.get('train').get('inputs')[()]
 y_train = f.get('train').get('targets')[()]
 x_test = f.get('test').get('inputs')[()]
@@ -69,9 +69,9 @@ y_test = f.get('test').get('targets')[()]
 
 At this point you can run the code contained inside the ModelCreation folder to train a model.
 This can be done by going inside a specifc model's folder (e.g. CNN) and typing the following command :
-<pre><i>python (executable) (three first letters of the dataset)  
-e.g. python cnn1d.py dap
-</i></pre>
+<pre><i>python (executable) (three first letters of the dataset)</i></pre>  
+e.g.In order to train Daphnet Gait with a CNN you would have to type:
+<pre><i>python cnn1d.py dap</i></pre>
 
 ...or you can retrieve the f1-score / f-weighted and f-mean score of your test-set by using the already trained models inside the
 trainedModels folder by typing:
