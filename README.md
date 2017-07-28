@@ -104,8 +104,9 @@ After the training process both recall and precision is calculated. The confusio
 <b>Basic Functions</b><br>
 There is a stucture followed throughout all the different files contained in this repository.<br>
 It goes this way:<br>
-The reading of the data was already described and is an easy process due to datareader.py preprocessing step.<br>
+
 1) Read data from a certain path.<br>
+The reading of the data was already described and is an easy process due to datareader.py preprocessing step.<br>
 2) Depending on the dataset, segment the data to specific time windows.<br>
 The data segmentation is done via functions implemented called segment_(dataset initials), e.g. segment_opp.<br>
 There is also a function called windows that is responsible for the 50% overlap handling.<br>
