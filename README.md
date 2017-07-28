@@ -79,22 +79,46 @@ trainedModels folder by typing:
 
 <h3>Models and basic functions description</h3>
 
-<b>Models</b>
+<b>Models</b><br>
 Initially, in all the following models except from the DNN-MLP, we use the datasets as is, and we split them in 1-5 second window segments as described in https://arxiv.org/abs/1604.08880 with 50% overlap. For the DNN, we flatten the input. E.g. if we have a dataset with 3 measurements x,y,z that contains 1000 samples and has a window size of 23 (ie 23 consecutive measurements, which, depending on the frequency of the measurements, it corresponds to 1-5 seconds of activity), the input dimension for the network will not be (1000,23,3) but it will be (1000,23*3) with the x,y,z having the formation x1,x2,..x23,y1,y2,..y23,z1,z2,...z23. 
 <ol>
 <li>Deep Feed Forward Neural Network - Multilayer Perceptron (DNN,MLP)</li>
 <br>A short description of this network is given here: https://en.wikipedia.org/wiki/Feedforward_neural_network
 The size of each layer depends on the dataset we use as an input, the smaller datasets contain fewer hidden layers, with fewer neurons each.<br>The goal was to replicate similar f-scores for the 3 datasets (Opportunity, Pamap2, Daphnet Gait) with the paper described here (https://arxiv.org/abs/1604.08880) so that we can examine the performance of these networks on the Sphere dataset and do some parameter and optimization function exploration.<br>
-There is a an if-else section in each algorithm which changes the parameters depending on which dataset (dap,opp,pam,sph) is given. In case another dataset name or a name is not given, it returns an error code. This part of the code could be changed as to include an additional dataset with different parameter configurations.
-
+There is a an if-else section in each algorithm which changes the parameters depending on which dataset (dap,opp,pam,sph) is given. In case another dataset name or a name is not given, it returns an error code. This part of the code could be changed as to include an additional dataset with different parameter configurations.<br>
 <li>Convolutional Neural Network (CNN)</li>
 <br>The network is described here : https://en.wikipedia.org/wiki/Convolutional_neural_network
 <br>We follow the same logic described in the paper mentioned above.
-After the training process both recall and precision is calculated. The confusion matrix is printed as well.
+After the training process both recall and precision is calculated. The confusion matrix is printed as well.<br>
 <li>Long Short Term Memory Recurrent Neural Network (LSTM-RNN)</li>
 <br>The network is described here : https://en.wikipedia.org/wiki/Long_short-term_memory
-<br>Same logic as above applies.
+<br>Same logic as above applies.<br>
 <li>Bi-Directional Long Short Term Memory Recurrent Neural Network (BD-LSTM-RNN)</li>
 <br>The bi directional concept of an RNN is described here : https://en.wikipedia.org/wiki/Bidirectional_recurrent_neural_networks
 <br>Same logic as above applies.
 </ol>
+
+<b>Basic Functions</b><br>
+There is a stucture followed throughout all the different files contained in this repository.<br>
+It goes this way:<br>
+The reading of the data was already described and is an easy process due to datareader.py preprocessing step.<br>
+1) Read data from a certain path.<br>
+2) Depending on the dataset, segment the data to specific time windows.<br>
+The data segmentation is done via functions implemented called segment_(dataset initials), e.g. segment_opp.<br>
+There is also a function called windows that is responsible for the 50% overlap handling.<br>
+3) Write some initial parameters, (training epochs, number of labels/classes, number of features etc) with respect to the dataset.<br>
+This is done in each separate script provided, and the actual numbers were either hardcoded based on experimentations or suggestions of the paper of Hammerla et al. (https://arxiv.org/abs/1604.08880)<br>
+Other parameters can be retrieved by the input itself (e.g. number of samples)<br>
+4) Make the labels of the test/train set one-hot.<br>
+This seems as easy as a single function calling, i.e. pd.get_dummies but this is only correct when the train and test set contain the same labels. There has to be a different process for label mismatches between training-testing sets.
+5) Define the model.<br>
+The definition of the models was done using initial skeleton codes.<br>
+For the DNN-MLP we used the MNIST tutorial on tensorflow website and adapted it to our needs.(https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3_NeuralNetworks/multilayer_perceptron.py)<br>
+For the CNN, we used a tutorial blog for new tensorflow users and adapted it accordingly.(https://aqibsaeed.github.io/2016-11-04-human-activity-recognition-cnn/)<br>
+For the LSTMs, we used the higher-level tensorflow libraries (contrib library) following a github repository which was under MIT licence, dealing with the HAR problem.<br> 
+The FF-LSTM-RNN skeleton is from :https://github.com/guillaume-chevalier/LSTM-Human-Activity-Recognition<br>
+The BD-LSTM-RNN skeleton is from :https://github.com/guillaume-chevalier/HAR-stacked-residual-bidir-LSTMs<br>
+6) Define the optimization function.<br>
+We experimented with Adam Optimizer, Gradient Descent and Adagrad.
+7) Run the training session.<br>
+8) Print runntime and results for the test-set.<br>
