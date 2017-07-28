@@ -11,7 +11,7 @@ The main structure that we are going to follow is this:
 |---->datareader.py  
 |ModelCreation  
 |----->|CNN  
-|      |---->cnn1d.py  
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---->cnn1d.py  
 |----->|DNN  
 |      |---->mlp.py  
 |----->|RNN  
