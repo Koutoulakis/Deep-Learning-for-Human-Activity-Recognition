@@ -1,9 +1,12 @@
 # Deep Learning for Human Activity Recognition
 
+<b>Synopsis</b>
 In this repository a collection of deep learning networks will be trained and tested in order to tackle the Human Activity Recognition (HAR) problem.
 We use python 2.7 and tensorflow throughout this tutorial.
 
-The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets.
+The goal is to provide the public with a sequence of functions and files that would allow them in turn, with minimum changes, train test and evaluate their own datasets with state of the art deep learning models.
+
+<b>Repository Structure</b>
 
 The main structure that we are going to follow is this:
 
@@ -25,7 +28,14 @@ The main structure that we are going to follow is this:
 |----->fflstm  
 |----->bdlstm  
 
-#PREPROSSES DATASETS STAGE
+<b>Motivation</b>
+The motivation of creation of this repository was my MSc thesis project.
+
+<b>Installation</b>
+
+Below is a small description of the process the practitioner should follow in order to run the code provided or further extend it to his/her own purposes.  
+
+<b>PREPROSSES DATASETS STAGE</b>
 
 The Datareader folder contains a python script that follows the logic of this github repository : https://github.com/nhammerla/deepHAR  
 Its main purpose is to read a dataset and save it in a special file format known as hdf5 (https://support.hdfgroup.org/HDF5/), so that
