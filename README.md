@@ -86,13 +86,16 @@ Initially, in all the following models except from the DNN-MLP, we use the datas
 <br>A short description of this network is given here: https://en.wikipedia.org/wiki/Feedforward_neural_network
 The size of each layer depends on the dataset we use as an input, the smaller datasets contain fewer hidden layers, with fewer neurons each.<br>The goal was to replicate similar f-scores for the 3 datasets (Opportunity, Pamap2, Daphnet Gait) with the paper described here (https://arxiv.org/abs/1604.08880) so that we can examine the performance of these networks on the Sphere dataset and do some parameter and optimization function exploration.<br>
 There is a an if-else section in each algorithm which changes the parameters depending on which dataset (dap,opp,pam,sph) is given. In case another dataset name or a name is not given, it returns an error code. This part of the code could be changed as to include an additional dataset with different parameter configurations.<br>
+<br>
 <li>Convolutional Neural Network (CNN)</li>
 <br>The network is described here : https://en.wikipedia.org/wiki/Convolutional_neural_network
 <br>We follow the same logic described in the paper mentioned above.
 After the training process both recall and precision is calculated. The confusion matrix is printed as well.<br>
+<br>
 <li>Long Short Term Memory Recurrent Neural Network (LSTM-RNN)</li>
 <br>The network is described here : https://en.wikipedia.org/wiki/Long_short-term_memory
 <br>Same logic as above applies.<br>
+<br>
 <li>Bi-Directional Long Short Term Memory Recurrent Neural Network (BD-LSTM-RNN)</li>
 <br>The bi directional concept of an RNN is described here : https://en.wikipedia.org/wiki/Bidirectional_recurrent_neural_networks
 <br>Same logic as above applies.
