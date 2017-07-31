@@ -52,7 +52,8 @@ folder and running the command in a terminal:
 <pre><i>python datareader.py (dataset-three-first-initial-letters)</i></pre>  
 e.g. for Daphnet gait you would have to type:  
 <pre><i>python datareader.py dap</i></pre>
-<br>Note: For datasets with similar names, e.g. pamap and pamap2, we would use "pam" for pamap and "pa2" for pamap2.<br>
+<br>Note: For datasets with similar names, e.g. pamap and pamap2, we would use "pam" for pamap and "pa2" for pamap2.<br>  
+
 After this stage is complete, a file named daphnet.h5 will have been created containing the training and testing sets that were decided to be used for this dataset in the datareader.py (Note: the training-test split we follow for the Opportunity, Daphnet and PAMAP2 datasets are described in Deep, Convolutional, and Recurrent Models for Human Activity Recognition using Wearables, by Nils Y. Hammerla, Shane Halloran, Thomas Ploetz (https://arxiv.org/abs/1604.08880). The split for the Sphere dataset is already created for us in its hosting site.)  
 We can later on call the the dataset in our code by fixing the correct path in the line calling the os python function.
 e.g. :  
