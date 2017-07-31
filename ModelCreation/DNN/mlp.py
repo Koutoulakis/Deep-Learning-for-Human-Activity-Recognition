@@ -42,46 +42,25 @@ def windowz(data, size):
         yield start, start + size
         start += (size / 2)
 
-def segment_dap(x_train,y_train,window_size):
+def segment(x_train,y_train,window_size):
     # 9 is the number of features. we put window_size samples in the same line
     # with 9 * window_size per row. The format is, if we had 3 features, xyz
     # x1,y1,z1,x2,y2,z2,x3,y3,z3 etc, per row. 1->2->3...->window_size
-    segments = np.zeros(((len(x_train)//(window_size//2))-1,window_size*9))
+    shapeX = x_train.shape
+    segments = np.zeros(((len(x_train)//(window_size//2))-1,window_size*shapeX[1]))
     labels = np.zeros(((len(y_train)//(window_size//2))-1))
     i_segment = 0
     i_label = 0
+
     for (start,end) in windowz(x_train,window_size):
         if(len(x_train[start:end]) == window_size):
             m = stats.mode(y_train[start:end])
-            offset_st = 0
-            offset_fin = 9
-            offset_st_f1 = 0
-            offset_fin_f1 = window_size
-            offset_st_f2 = window_size
-            offset_fin_f2 = 2*window_size
-            offset_st_f3 = 2*window_size
-            offset_fin_f3 = 3*window_size
-            offset_st_f4 = 3*window_size
-            offset_fin_f4 = 4*window_size
-            offset_st_f5 = 4*window_size
-            offset_fin_f5 = 5*window_size
-            offset_st_f6 = 5*window_size
-            offset_fin_f6 = 6*window_size
-            offset_st_f7 = 6*window_size
-            offset_fin_f7 = 7*window_size
-            offset_st_f8 = 7*window_size
-            offset_fin_f8 = 8*window_size
-            offset_st_f9 = 8*window_size
-            offset_fin_f9 = 9*window_size
-            segments[i_segment][offset_st_f1:offset_fin_f1] = (x_train[start:end])[:, [0]].T
-            segments[i_segment][offset_st_f2:offset_fin_f2] = (x_train[start:end])[:, [1]].T
-            segments[i_segment][offset_st_f3:offset_fin_f3] = (x_train[start:end])[:, [2]].T
-            segments[i_segment][offset_st_f4:offset_fin_f4] = (x_train[start:end])[:, [3]].T
-            segments[i_segment][offset_st_f5:offset_fin_f5] = (x_train[start:end])[:, [4]].T
-            segments[i_segment][offset_st_f6:offset_fin_f6] = (x_train[start:end])[:, [5]].T
-            segments[i_segment][offset_st_f7:offset_fin_f7] = (x_train[start:end])[:, [6]].T
-            segments[i_segment][offset_st_f8:offset_fin_f8] = (x_train[start:end])[:, [7]].T
-            segments[i_segment][offset_st_f9:offset_fin_f9] = (x_train[start:end])[:, [8]].T
+            offset_st=0
+            offset_fin=window_size
+            for i in range(shapeX[1]):
+                segments[i_segment][offset_st:offset_fin] = (x_train[start:end])[:, [i]].T
+                offset_st = (i+1)*window_size
+                offset_fin = (i+2)*window_size
             # for i in range(window_size):
             #     segments[i_segment][offset_st:offset_fin] = x_train[start+i]
             #     offset_st+=9
@@ -160,22 +139,22 @@ input_width = 23
 if dataset == "opp":
     input_width = 23
     print "segmenting signal..."
-    train_x, train_y = segment_opp(x_train,y_train,input_width)
-    test_x, test_y = segment_opp(x_test,y_test,input_width)
+    train_x, train_y = segment(x_train,y_train,input_width)
+    test_x, test_y = segment(x_test,y_test,input_width)
     print "signal segmented."
 elif dataset =="dap":
     print "dap seg"
     input_width = 25
     print "segmenting signal..."
-    train_x, train_y = segment_dap(x_train,y_train,input_width)
-    test_x, test_y = segment_dap(x_test,y_test,input_width)
+    train_x, train_y = segment(x_train,y_train,input_width)
+    test_x, test_y = segment(x_test,y_test,input_width)
     print "signal segmented."
 elif dataset =="pa2":
     print "pa2 seg"
     input_width = 25
     print "segmenting signal..."
-    train_x, train_y = segment_pa2(x_train,y_train,input_width)
-    test_x, test_y = segment_pa2(x_test,y_test,input_width)
+    train_x, train_y = segment(x_train,y_train,input_width)
+    test_x, test_y = segment(x_test,y_test,input_width)
     print "signal segmented."
 elif dataset =="sph":
     print "sph seg"
