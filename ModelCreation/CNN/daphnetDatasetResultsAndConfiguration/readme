@@ -1,0 +1,38 @@
+These are the configurations used for achieving 0.654609118612 f1-score for Daphnet Gait dataset
+
+1)Downsampled at 30hz.
+
+2)50% overlap in the sliding windows.
+
+3)Parameters:
+window size = 25 (creates approximately 470k samples)
+labels = 2
+num_channels--features/measurements = 9
+batch size = 64
+learning rate = 0.0005
+training epochs = 50
+
+4)Model:
+2 hidden layers of 128 neurons each.
+1 fully connected layer with 512 neurons
+Each layer passes through ReLU activation function and a
+max pooling layer. The dropout rate is 0.1 for the first layer
+0.25 for the second and 0.5 for the third one (fully connected)
+during training.
+Kernel sizes (for the convolution) : 
+kernel_size_1 = 7
+kernel_size_2 = 3
+
+5)Optimization function:
+Gradient Descent to minimize negative log likelihood
+
+6)Results:
+
+f1_score : 0.654609118612
+ [[3256   34]
+ [ 366  116]]
+
+Time spent in a quad core, i5 pentium 2.8Ghz and 12GB RAM is 754.130602837 seconds
+
+With tf.summary activated it takes : 1891.47182298 seconds
+(to see the summaries type in the summary folder they are created:python -m tensorflow.tensorboard --logdir=.)
