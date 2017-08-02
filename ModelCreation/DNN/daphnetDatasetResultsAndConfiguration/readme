@@ -1,4 +1,4 @@
-<h2> Notes on DNN specifications for Daphnet Gait dataset </h2>
+Notes on DNN specifications for Daphnet Gait dataset
 
 1)Downsampled at 30hz. (the dataset)
 
