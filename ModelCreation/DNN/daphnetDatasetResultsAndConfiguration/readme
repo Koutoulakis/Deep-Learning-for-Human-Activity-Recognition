@@ -32,5 +32,3 @@ confusion_matrix
 
 Time spent in a quad core, i5 pentium 2.8Ghz and 12GB RAM is 3152.52668595 seconds
 
-With tf.summary activated it takes : 1891.47182298 seconds
-(to see the summaries type in the summary folder they are created:python -m tensorflow.tensorboard --logdir=.)
