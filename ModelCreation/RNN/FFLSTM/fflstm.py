@@ -41,7 +41,7 @@ from sklearn import metrics
 from scipy import stats
 import h5py
 import os
-
+import sys
 
 # def feature_normalize(dataset):
 #     mu = np.mean(dataset,axis = 0)
@@ -158,7 +158,7 @@ class Config(object):
         # LSTM structure
         self.n_inputs = len(X_train[0][0])  # Features count is of 9: 3 * 3D sensors features over time
         print "n_inputs len(X_train[0][0])",len(X_train[0][0])
-        self.n_hidden = 32  # nb of neurons inside the neural network
+        self.n_hidden = 64  # nb of neurons inside the neural network
         self.n_classes = self.num_labels  # Final output classes
         self.W = {
             'hidden': tf.Variable(tf.random_normal([self.n_inputs, self.n_hidden])),
@@ -385,7 +385,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, dtype=tf.float32))
 # # Step 4: Hooray, now train the neural network
 # # --------------------------------------------
 
-training_epochs = 200
+training_epochs = 1000
 total_batches = train_x.shape[0] // config.batch_size
 b = 0
 # Launch the graph
@@ -416,20 +416,27 @@ with tf.Session() as sess:
     val_accuracy, y_pred = sess.run([accuracy, y_p], feed_dict={X:test_x, Y:test_y})
     print "validation accuracy:", val_accuracy
     y_true = np.argmax(test_y,1)
-    print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
-    print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
-    print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
-    #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
-    print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
-    print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
-    print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
-    #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
-    print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
-    print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
-    print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    # print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
+    # print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
+    # print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
+    # #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
+    # print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
+    # print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
+    # print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
+    # #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
+    # print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
+    # print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+    # print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
     #print "f1_score_samples", metrics.f1_score(y_true, y_pred, average="samples")
-    if dataset=="dap":
-        print "f1_score",metrics.f1_score(y_true, y_pred)
+    if dataset=="opp" or dataset == "pa2" or dataset =="sph":
+        print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    elif dataset=="dap":
+        print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+    else:
+        print "wrong dataset"
+    # if dataset=="dap":
+    #     print "f1_score",metrics.f1_score(y_true, y_pred)
     print "confusion_matrix"
     print metrics.confusion_matrix(y_true, y_pred)
 
