@@ -1,4 +1,4 @@
-Notes on DNN specifications for Daphnet Gait dataset
+DNN configurations needed to achieve f1_score of 0.639072634384 for Daphnet Gait dataset
 
 1)Downsampled at 30hz. (the dataset)
 
