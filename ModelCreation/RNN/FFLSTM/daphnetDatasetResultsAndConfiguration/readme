@@ -1,0 +1,60 @@
+Configurations done to achieve f1_score equal to 0.750831223164
+
+1)Downsampled at 30hz.
+
+2)50% overlap in the sliding windows.
+
+3)Parameters:
+window size = 25 (creates approximately 470k samples)
+labels = 2
+nfeatures/measurements = 9
+batch size = 64
+learning rate = 0.001
+training epochs = 200
+
+4)Model:
+2 stacked forward layers of 32-128 neurons each.
+1 fully connected layer with 512 neurons
+The dropout rate is 0.5 for all the layers
+during training.
+
+5)Optimization function:
+Adam Optimizer minimizing negative log likelihood
+
+6)Results:
+
+Adam Optimizer 1000 epoch run with 64 neurons per layer
+f1_score 0.750831223164
+confusion_matrix
+[[3139  151]
+ [ 236  246]]
+
+
+Adam Optimizer 500 epoch run with 32 neurons per layer 
+f1_score 0.693300718062
+confusion_matrix
+[[3098  192]
+ [ 282  200]]
+
+
+Adagrad 200 epoch run with 32 neurons per layer
+f1_score 0.66895333132
+confusion_matrix
+[[3211   79]
+ [ 342  140]]
+
+ Adagrad 500 epoch run with 128 neurons per layer
+ f1_score 0.681095438158
+confusion_matrix
+[[3221   69]
+ [ 335  147]]
+
+
+
+AdadeltaOptimizer 50 epoch run (needs more epochs to converge.)
+f1_score 0.465873690173
+confusion_matrix
+[[3290    0]
+ [ 482    0]]
+
+Time spent in a quad core, i5 pentium 2.8Ghz and 12GB RAM is 33987.555876 seconds (for the best run)
