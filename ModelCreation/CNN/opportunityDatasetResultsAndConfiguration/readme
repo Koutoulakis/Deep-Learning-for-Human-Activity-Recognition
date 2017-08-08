@@ -1,5 +1,4 @@
-Here are the exact configurations followed to achieve f1_score_weighted equal to 0.894410382181 and f1_score_mean equal to 0.597588826511 for
-the Opportunity Dataset using a CNN
+Here are the exact configurations followed to achieve f1_score_weighted f1_score_mean equal to 0.597588826511 and equal to 0.894410382181 for the Opportunity Dataset using a CNN
 
 1)50% overlap in the sliding windows.
 
