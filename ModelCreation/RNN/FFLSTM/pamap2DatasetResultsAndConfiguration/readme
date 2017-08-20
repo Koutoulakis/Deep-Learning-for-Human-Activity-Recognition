@@ -1,4 +1,4 @@
-Here are the exact configurations followed to achieve f1_score_mean equal to 0.950636942675 and f1_score_weighted equal to 0.950284090788 for the Pamap2 Dataset using a CNN
+Here are the exact configurations followed to achieve f1_score_mean equal to 0.950636942675 and f1_score_weighted equal to 0.950284090788 for the Pamap2 Dataset using a FFLSTM
 
 
 1)50% overlap in the sliding windows.
