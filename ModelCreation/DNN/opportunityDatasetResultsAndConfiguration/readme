@@ -1,0 +1,56 @@
+Here are the exact configurations followed to achieve f1_score_mean equal to 0.521827830393 and f1_score_weighted equal to 0.875794078693 for the Opportunity Dataset using a DNN
+
+1)50% overlap in the sliding windows.
+
+2)Parameters:
+window size = 23 (creates approximately 650k samples)
+labels = 18
+features/measurements = 77
+batch size = 64
+learning rate = 0.0005
+training epochs = 20000
+
+3)Model:
+
+3 hidden layers of 256 neurons each.
+1 fully connected layer with 512 neurons
+Each layer passes through ReLU activation function and a
+max pooling layer. The dropout rate is 0.1 for the first layer
+0.25 for the second and 0.5 for the third one and the fully connected layer.
+during training.
+Kernel sizes (for the convolution) : 
+kernel_size_1 = 7
+kernel_size_2 = 3
+kernel_size_3 = 1
+
+4)Optimization function:
+Stohastic Gradient Descent optimizer to minimize negative log likelihood
+
+5)Results:
+
+f1_score_mean 0.521827830393
+f1_score_weighted 0.875794078693
+f1_score_per_class [ 0.94606034  0.51948052  0.65284974  0.48051948  0.77828054  0.49880096
+  0.62345679  0.39495798  0.44680851  0.475       0.3         0.36111111
+  0.32142857  0.52380952  0.42276423  0.48051948  0.64577657  0.5212766 ]
+
+confusion_matrix
+[[8717   16   13   24   15   33   24   22   22    6   12    6    2    2 	14    7  105   11]
+ [  27   40    0   17    0    0    0    0    0    0    0    0    0    0 	0    0    1    0]
+ [  22    0   63    1   19    0    0    0    0    0    0    0    0    0 	0    0    0    3]
+ [  24    7    1   37    0    0    0    0    0    0    0    0    0    0 	0    0    2    0]
+ [  10    0    2    1   86    0    0    0    0    0    0    0    0    0 	0    0    0    0]
+ [  99    0    0    0    1  104   22   19    4    0    0    0    0    0 	0    0    0    0]
+ [  48    0    3    0    0   12  101    0    4    0    1    0    0    0 	0    0    0    0]
+ [  52    0    0    0    0   12    3   47    3    0    0    1    0    3 	1    0    1    1]
+ [  42    0    0    0    0    3    2    8   42    0    0    1    1    0 	2    0    0    3]
+ [   7    0    0    0    0    1    1    2    1   19    2    3    1    1 	0    0    0    7]
+ [   6    0    0    0    0    2    0    3    0    6    9    2    3    0 	0    0    0    0]
+ [  13    0    0    0    0    0    0    7    2    0    1   13    2    4 	1    0    0    1]
+ [  13    0    0    0    0    1    0    1    1    1    3    2    9    2 	5    0    0    0]
+ [  15    0    0    0    1    0    0    4    1    0    0    0    0   33 	13    0    0    0]
+ [  16    0    0    0    0    0    0    1    4    0    0    0    0   14 	26    0    0    0]
+ [  68    2    0    1    0    0    0    0    0    0    0    0    0    0 	0   37    2    0]
+ [ 143    4    0    1    0    0    1    0    0    0    0    0    0    0 	0    0  237    0]		
+ [  55    0    3    1    0    0    1    0    0    3    1    0    0    0 	0    0    0   49]]
+--- 300465.536745 seconds ---
