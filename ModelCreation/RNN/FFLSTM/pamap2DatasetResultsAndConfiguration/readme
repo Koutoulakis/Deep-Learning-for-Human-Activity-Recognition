@@ -1,0 +1,44 @@
+Here are the exact configurations followed to achieve f1_score_mean equal to 0.950636942675 and f1_score_weighted equal to 0.950284090788 for the Pamap2 Dataset using a CNN
+
+
+1)50% overlap in the sliding windows.
+
+2)Parameters:
+window size = 25 (creates approximately 430k samples)
+labels = 11
+features/measurements = 52
+batch size = 64
+learning rate = 0.0005
+training epochs = 10000
+
+3)Model:
+
+64 neurons inside each hidden layer.
+2 hidden layers stacked
+The dropout rate is 0.5 for all the layers during training.
+
+4)Optimization function:
+
+Adagrad optimizer to minimize negative log likelihood
+
+5)Results:
+
+
+f1_score_mean 0.950636942675
+f1_score_weighted 0.950284090788
+
+f1_score_per_class [ 1.          0.89285714  0.88888889  0.96240602  0.98181818  0.98039216
+  0.98507463  0.92537313  0.84615385  0.93577982  0.97409326]
+confusion_matrix
+[[59  0  0  0  0  0  0  0  0  0  0]
+ [ 0 50  8  0  0  0  0  0  0  0  0]
+ [ 0  3 56  1  0  0  0  0  0  0  1]
+ [ 0  0  1 64  0  0  0  0  0  0  0]
+ [ 0  0  0  2 54  0  0  0  0  0  0]
+ [ 0  1  0  0  0 50  1  0  0  0  0]
+ [ 0  0  0  1  0  0 66  0  0  0  0]
+ [ 0  0  0  0  0  0  0 31  1  2  0]
+ [ 0  0  0  0  0  0  0  2 22  2  2]
+ [ 0  0  0  0  0  0  0  0  1 51  2]
+ [ 0  0  0  0  0  0  0  0  0  0 94]]
+--- 12867.5059249 seconds ---
