@@ -1,0 +1,42 @@
+Here are the exact configurations followed to achieve f1_score_mean equal to 0.898089171975 and f1_score_weighted equal to 0.896746005494 for the Pamap2 Dataset using a BDLSTM
+
+1)50% overlap in the sliding windows.
+
+2)Parameters:
+window size = 25 (creates approximately 430k samples)
+labels = 11
+features/measurements = 52
+batch size = 64
+learning rate = 0.001
+training epochs = 10000
+
+3)Model:
+
+128 neurons inside each hidden layer.
+2 hidden layers stacked
+The dropout rate is 0.5 for all the layers during training.
+
+4)Optimization function:
+
+Adam optimizer to minimize negative log likelihood
+
+5)Results:
+
+f1_score_mean 0.898089171975
+f1_score_weighted 0.896746005494
+
+f1_score_per_class [ 0.92561983  0.85217391  0.875       0.94656489  0.86868687  0.99029126
+  0.97058824  0.84615385  0.72727273  0.71111111  0.97354497]
+Confusion matrix
+[[56  3  0  0  0  0  0  0  0  0  0]
+ [ 0 49  9  0  0  0  0  0  0  0  0]
+ [ 0  4 56  1  0  0  0  0  0  0  0]
+ [ 0  1  0 62  0  0  1  1  0  0  0]
+ [ 6  0  2  2 43  0  2  0  0  1  0]
+ [ 0  0  0  0  0 51  0  0  1  0  0]
+ [ 0  0  0  1  0  0 66  0  0  0  0]
+ [ 0  0  0  0  0  0  0 33  0  1  0]
+ [ 0  0  0  0  0  0  0  3 24  0  1]
+ [ 0  0  0  0  0  0  0  7 13 32  2]
+ [ 0  0  0  0  0  0  0  0  0  2 92]]
+--- 17519.7902038 seconds ---
