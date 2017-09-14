@@ -34,11 +34,7 @@ The main structure that we are going to follow is this:
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---->opportunityDatasetResultsAndConfiguration  
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---->pamap2DatasetResultsAndConfiguration  
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---->bdlstm.py  
-|TrainedModels  
-|----->cnn  
-|----->mlp  
-|----->fflstm  
-|----->bdlstm  
+
 
 <h3>Motivation</h3>
 The motivation for the creation of this repository lies in my MSc thesis project.
@@ -66,7 +62,7 @@ e.g. for Daphnet gait you would have to type:
 <pre><i>python datareader.py dap</i></pre>
 <br>Note: For datasets with similar names, e.g. pamap and pamap2, we would use "pam" for pamap and "pa2" for pamap2.<br>  
 
-After this stage is complete, a file named daphnet.h5 will have been created containing the training and testing sets that were decided to be used for this dataset in the datareader.py (Note: the training-test split we follow for the Opportunity, Daphnet and PAMAP2 datasets are described in Deep, Convolutional, and Recurrent Models for Human Activity Recognition using Wearables, by Nils Y. Hammerla, Shane Halloran, Thomas Ploetz (https://arxiv.org/abs/1604.08880). The split for the Sphere dataset is already created for us in its hosting site.)  
+After this stage is complete, a file named daphnet.h5 will have been created containing the training and testing sets that were decided to be used for this dataset in the datareader.py (Note: the training-test split we follow for the Opportunity, Daphnet and PAMAP2 datasets are described in Deep, Convolutional, and Recurrent Models for Human Activity Recognition using Wearables, by Nils Y. Hammerla, Shane Halloran, Thomas Ploetz (https://arxiv.org/abs/1604.08880). The split for the Sphere dataset is proposed by a Sphere researcher and it is files 1-8 are used as train set, and files 9-10 as test set.)  
 We can later on call the the dataset in our code by fixing the correct path in the line calling the os python function.
 e.g. :  
 <pre><i>path = os.path.join(os.path.expanduser('~'), 'Downloads', 'OpportunityUCIDataset', 'opportunity.h5')</i></pre>    
@@ -85,10 +81,6 @@ This can be done by going inside a specifc model's folder (e.g. CNN) and typing 
 <pre><i>python (executable) (three first letters of the dataset)</i></pre>  
 e.g.In order to train Daphnet Gait with a CNN you would have to type:
 <pre><i>python cnn1d.py dap</i></pre>
-
-...or you can retrieve the f1-score / f-weighted and f-mean score of your test-set by using the already trained models inside the
-trainedModels folder by typing:
-<pre><i>I HAVENT DONE THIS PART YET</i></pre>
 
 <h3>Models and basic functions description</h3>
 
