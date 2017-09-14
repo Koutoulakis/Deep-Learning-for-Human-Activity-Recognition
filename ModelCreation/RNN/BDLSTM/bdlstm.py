@@ -1,12 +1,6 @@
-'''
-A Bidirectional Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
-This example is using the MNIST database of handwritten digits (http://yann.lecun.com/exdb/mnist/)
-Long Short Term Memory paper: http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf
-
-Author: Aymeric Damien
-Project: https://github.com/aymericdamien/TensorFlow-Examples/
-'''
-
+## WE USE THE HIGHER LEVEL TENSORFLOW LIBRARY CALLED TF.CONTRIB WHICH HAS AN LSTM CELL
+## IMPLEMENTED. ALSO, A SOFTWARE TEMPLATE FOR 1 LAYER MNIST DATASET
+## IMPLEMENTATION WAS USED AS AN INITIAL TEMPLATE Project: https://github.com/aymericdamien/TensorFlow-Examples/
 
 import tensorflow as tf
 from tensorflow.contrib import rnn
@@ -18,15 +12,8 @@ from sklearn import metrics
 import h5py
 import os
 import sys
-# Import MNIST data
-# from tensorflow.examples.tutorials.mnist import input_data
-# mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
-
-'''
-To classify images using a bidirectional recurrent neural network, we consider
-every image row as a sequence of pixels. Because MNIST image shape is 28*28px,
-we will then handle 28 sequences of 28 steps for every sample.
-'''
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 
 # def feature_normalize(dataset):
@@ -88,7 +75,19 @@ def segment_pa2(x_train,y_train,window_size):
             i_label+=1
             i_segment+=1
     return segments, labels
-
+def segment_sph(x_train,y_train,window_size):
+    segments = np.zeros(((len(x_train)//(window_size//2))-1,window_size,52))
+    labels = np.zeros(((len(y_train)//(window_size//2))-1))
+    i_segment = 0
+    i_label = 0
+    for (start,end) in windowz(x_train,window_size):
+        if(len(x_train[start:end]) == window_size):
+            m = stats.mode(y_train[start:end])
+            segments[i_segment] = x_train[start:end]
+            labels[i_label] = m[0]
+            i_label+=1
+            i_segment+=1
+    return segments, labels
 
 print "starting..."
 start_time = time.time()
@@ -110,7 +109,7 @@ elif dataset =="dap":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'dataset_fog_release','dataset_fog_release', 'daphnet.h5')
 elif dataset =="pa2":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'PAMAP2_Dataset', 'pamap2.h5')
-elif dataset =="sphere":
+elif dataset =="sph":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'SphereDataset', 'sphere.h5')
 else:
     print "Dataset not supported yet"
@@ -178,6 +177,11 @@ elif dataset =="pa2":
     print "signal segmented."
 elif dataset =="sph":
     print "sph seg"
+    input_width = 25
+    print "segmenting signal..."
+    train_x, train_y = segment_sph(x_train,y_train,input_width)
+    test_x, test_y = segment_sph(x_test,y_test,input_width)
+    print "signal segmented."
 else:
     print "no correct dataset"
 
@@ -232,8 +236,8 @@ elif dataset =="sph":
     print "sph"
     input_height = 1
     input_width = input_width #or 90 for actitracker
-    num_labels = 18  #or 6 for actitracker
-    num_channels = 77 #or 3 for actitracker
+    num_labels = 20  #or 6 for actitracker
+    num_channels = 52 #or 3 for actitracker
 else:
     print "wrong dataset"
 
@@ -243,11 +247,6 @@ training_iters = 100000
 batch_size = 64
 display_step = 10
 
-# # Network Parameters
-# n_input = 28 # MNIST data input (img shape: 28*28)
-# n_steps = 28 # timesteps
-# n_hidden = 128 # hidden layer num of features
-# n_classes = 10 # MNIST total classes (0-9 digits)
 
 
 # Network Parameters
@@ -276,15 +275,8 @@ biases = {
 
 def BiRNN(x, weights, biases):
 
-    # Prepare data shape to match `bidirectional_rnn` function requirements
-    # Current data input shape: (batch_size, n_steps, n_input)
-    # Required shape: 'n_steps' tensors list of shape (batch_size, n_input)
-
-    # Unstack to get a list of 'n_steps' tensors of shape (batch_size, n_input)
     x = tf.unstack(x, n_steps, 1)
 
-    # Define lstm cells with tensorflow
-    # Forward direction cell
     lstm_fw_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.5)
     # Backward direction cell
     lstm_bw_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.5)
@@ -306,6 +298,12 @@ pred = BiRNN(x, weights, biases)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+
+# optimizer = tf.train.AdagradOptimizer(learning_rate=learning_rate).minimize(cost)
+
+# optimizer = tf.train.AdadeltaOptimizer(learning_rate=learning_rate).minimize(cost)
+
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
@@ -314,6 +312,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 init = tf.global_variables_initializer()
 
 training_epochs = 50
+loss_over_time = np.zeros(training_epochs)
 total_batches = train_x.shape[0] // batch_size
 b = 0
 # Launch the graph
@@ -334,6 +333,7 @@ with tf.Session() as sess:
 
             _, c = sess.run([optimizer, cost],feed_dict={x: batch_x, y : batch_y})
             cost_history = np.append(cost_history,c)
+        loss_over_time[epoch] = np.mean(cost_history)
         print "Epoch: ",epoch," Training Loss: ",np.mean(cost_history)," Training Accuracy: ",sess.run(accuracy, feed_dict={x: train_x, y: train_y})
     print "Testing Accuracy:", sess.run(accuracy, feed_dict={x: test_x, y: test_y})
 
@@ -344,24 +344,44 @@ with tf.Session() as sess:
     val_accuracy, y_pred = sess.run([accuracy, y_p], feed_dict={x:test_x, y:test_y})
     print "validation accuracy:", val_accuracy
     y_true = np.argmax(test_y,1)
-    print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
-    print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
-    print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
-    #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
-    print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
-    print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
-    print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
-    #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
-    print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
-    print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
-    print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    # print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
+    # print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
+    # print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
+    # #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
+    # print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
+    # print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
+    # print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
+    # #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
+    # print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
+    # print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+    # print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
     #print "f1_score_samples", metrics.f1_score(y_true, y_pred, average="samples")
-    if dataset=="dap":
-        print "f1_score",metrics.f1_score(y_true, y_pred)
-    print "confusion_matrix"
+    if dataset=="opp" or dataset == "pa2" :
+        #print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+        # print "f1_score_per_class", metrics.f1_score(y_true, y_pred, average=None)
+    elif dataset=="dap":
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+    elif dataset=="sph":
+        print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+    else:
+        print "wrong dataset"
+    # if dataset=="dap":
+    #     print "f1_score",metrics.f1_score(y_true, y_pred)
+    print "Confusion matrix"
     print metrics.confusion_matrix(y_true, y_pred)
     #fpr, tpr, tresholds = metrics.roc_curve(y_true, y_pred)
-
+    # plt.figure(1)
+    # plt.plot(loss_over_time)
+    # plt.title("Loss value over epochs (BDLSTM DG)")
+    # plt.xlabel("Epoch")
+    # plt.ylabel("Loss")
+    # plt.show()
 
     #######################################################################################
     #### micro- macro- weighted explanation ###############################################
