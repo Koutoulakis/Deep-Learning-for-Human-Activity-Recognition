@@ -35,6 +35,17 @@ from random import shuffle
 #     mu = np.mean(dataset,axis = 0)
 #     sigma = np.std(dataset,axis = 0)
 #     return (dataset - mu)/sigma
+# def variable_summaries(var,name):
+#   """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+#   with tf.name_scope('summaries_'+name):
+#     mean = tf.reduce_mean(var)
+#     tf.summary.scalar('mean', mean)
+#     with tf.name_scope('stddev'):
+#       stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+#     tf.summary.scalar('stddev', stddev)
+#     tf.summary.scalar('max', tf.reduce_max(var))
+#     tf.summary.scalar('min', tf.reduce_min(var))
+#     tf.summary.histogram('histogram', var)
 
 def windowz(data, size):
     start = 0
@@ -89,7 +100,7 @@ elif dataset =="dap":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'dataset_fog_release','dataset_fog_release', 'daphnet.h5')
 elif dataset =="pa2":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'PAMAP2_Dataset', 'pamap2.h5')
-elif dataset =="sphere":
+elif dataset =="sph":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'SphereDataset', 'sphere.h5')
 else:
     print "Dataset not supported yet"
@@ -158,6 +169,11 @@ elif dataset =="pa2":
     print "signal segmented."
 elif dataset =="sph":
     print "sph seg"
+    input_width = 25
+    print "segmenting signal..."
+    train_x, train_y = segment(x_train,y_train,input_width)
+    test_x, test_y = segment(x_test,y_test,input_width)
+    print "signal segmented."
 else:
     print "no correct dataset"
 
@@ -210,21 +226,21 @@ elif dataset =="sph":
     print "sph"
     input_height = 1
     input_width = input_width #or 90 for actitracker
-    num_labels = 18  #or 6 for actitracker
-    num_channels = 77 #or 3 for actitracker
+    num_labels = 20  #or 6 for actitracker
+    num_channels = 52 #or 3 for actitracker
 else:
     print "wrong dataset"
 
 learning_rate = 0.001#1e-3
-training_epochs = 400
+training_epochs = 500
 batch_size = 64
 display_step = 1
 
 # Network Parameters
-n_hidden_1 = 512 # 1st layer number of features
-n_hidden_2 = 512 # 2nd layer number of features
-n_hidden_3 = 512 # 3nd layer number of features
-n_hidden_4 = 512 # 4nd layer number of features
+n_hidden_1 = 256 # 1st layer number of features
+n_hidden_2 = 256 # 2nd layer number of features
+n_hidden_3 = 256 # 3nd layer number of features
+n_hidden_4 = 256 # 4nd layer number of features
 # n_input = 90 # MNIST data input (img shape: 28*28)
 # n_classes = 6 # MNIST total classes (0-9 digits)
 dropout1 = tf.placeholder(tf.float64) #0.5
@@ -250,6 +266,9 @@ def multilayer_perceptron(x, weights, biases,dropout1=1-0.5,dropout2=1-0.5):
     layer_1 = tf.nn.dropout(layer_1, dropout1)
     layer_1 = tf.nn.relu(layer_1)
 
+
+    # variable_summaries(weights['h1'],'W_h1')
+    # variable_summaries(biases['b1'],'b_b1')
     # tf.summary.histogram('layer_1', layer_1)
     # tf.summary.histogram('layer_1/sparsity', tf.nn.zero_fraction(layer_1))
 
@@ -258,13 +277,15 @@ def multilayer_perceptron(x, weights, biases,dropout1=1-0.5,dropout2=1-0.5):
     layer_2 = tf.nn.dropout(layer_2, dropout2)
     layer_2 = tf.nn.relu(layer_2)
 
+    # variable_summaries(weights['h2'],'W_h2')
+    # variable_summaries(biases['b2'],'b_b2')
     # tf.summary.histogram('layer_2', layer_2)
     # tf.summary.histogram('layer_2/sparsity', tf.nn.zero_fraction(layer_2))
 
     # Hidden layer with RELU activation
     # layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
+    # layer_3 = tf.nn.dropout(layer_3, dropout2)
     # layer_3 = tf.nn.relu(layer_3)
-    # layer_3 = tf.nn.dropout(layer_3, dropout)
 
     # tf.summary.histogram('layer_3', layer_3)
     # tf.summary.histogram('layer_3/sparsity', tf.nn.zero_fraction(layer_3))
@@ -278,9 +299,11 @@ def multilayer_perceptron(x, weights, biases,dropout1=1-0.5,dropout2=1-0.5):
     # tf.summary.histogram('layer_4/sparsity', tf.nn.zero_fraction(layer_4))
 
     # Output layer with linear activation
-    out_layer = tf.add(tf.matmul(layer_2, weights['out']),biases['out'])
-    # out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
+    # out_layer = tf.add(tf.matmul(layer_3, weights['out']),biases['out'])
+    out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
     # out_layer = tf.nn.softmax(tf.add(tf.matmul(layer_2, weights['out']),biases['out']))
+    # variable_summaries(weights['out'],'W_out')
+    # variable_summaries(biases['out'],'b_out')
     # tf.summary.histogram('out_layer', out_layer)
     # tf.summary.histogram('out_layer/sparsity', tf.nn.zero_fraction(out_layer))
 
@@ -315,7 +338,8 @@ pred = multilayer_perceptron(x, weights, biases)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred,labels=y)) 
 
 # tf.summary.scalar('cost', cost)
-global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
+# variable_summaries(cost,'cost')
+# global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
 
 
 # Create an optimizer.
@@ -329,9 +353,9 @@ global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
 # # Ask the optimizer to apply the capped gradients
 # optimizer = optimizer.apply_gradients(capped_grads_and_vars)
 
-optimizer = tf.train.GradientDescentOptimizer(learning_rate = learning_rate).minimize(cost)
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate = learning_rate).minimize(cost)
 
-# optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)
 
 
 correct_prediction = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
@@ -346,10 +370,12 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
 
 total_batches = train_x.shape[0] // batch_size
 print "total_batches=",total_batches
-
+loss_over_time = np.zeros(training_epochs)
 # Launch the graph
 with tf.Session() as sess:
     # sess.run(init)
+    # merged_summary_op = tf.summary.merge_all()
+    # summary_writer = tf.summary.FileWriter("./", sess.graph)
     tf.initialize_all_variables().run()
     # Training cycle
     for epoch in range(training_epochs):
@@ -375,7 +401,7 @@ with tf.Session() as sess:
             # batch_x, batch_y = mnist.train.next_batch(batch_size)
             # Run optimization op (backprop) and cost op (to get loss value)
             # _, c, summary = sess.run([optimizer, cost, merged_summary_op], feed_dict={x: batch_x,
-            #                                               y: batch_y, dropout : 1 - 0.5})
+            #                                               y: batch_y, dropout1 : 1 - 0.3,dropout2:1-0.5})
             _, c = sess.run([optimizer, cost], feed_dict={x: batch_x,y: batch_y, dropout1 : 1 - 0.5,dropout2:1-0.5})
             
             # if i>=37 and i<=41:
@@ -388,35 +414,66 @@ with tf.Session() as sess:
 
             # print "i=",i,"c=",c
             cost_history = np.append(cost_history,c)
+        loss_over_time[epoch] = np.mean(cost_history)
+            # summary_writer.add_summary(summary,global_step.eval(session=sess))
             # summary_writer.add_summary(summary,global_step.eval(session=sess))
         # Display logs per epoch step
-        print "Epoch: ",epoch," Training Loss: ",np.mean(cost_history)," Training Accuracy: ",sess.run(accuracy, feed_dict={x: train_x, y: train_y, dropout1 : 1-0.3,dropout2:1-0.5})
+        # with f1 score
+        # y_p = tf.argmax(pred, 1)
+        # val_accuracy, y_pred = sess.run([accuracy, y_p], feed_dict={x:test_x, y:test_y, dropout1 : 1,dropout2 : 1})
+        # y_true = np.argmax(test_y,1)
+        # print "Epoch: ",epoch," Training Loss: ",np.mean(cost_history)," Training Accuracy: ",sess.run(accuracy, feed_dict={x: train_x, y: train_y, dropout1 : 1,dropout2:1}),"f1_score", metrics.f1_score(y_true, y_pred, average="macro")
+        # Without f1 score
+        print "Epoch: ",epoch," Training Loss: ",np.mean(cost_history)," Training Accuracy: ",sess.run(accuracy, feed_dict={x: train_x, y: train_y, dropout1 : 1,dropout2:1})
     print("Optimization Finished!")
     print "Testing Accuracy:", sess.run(accuracy, feed_dict={x: test_x, y: test_y, dropout1 : 1,dropout2 : 1})
     y_p = tf.argmax(pred, 1)
     val_accuracy, y_pred = sess.run([accuracy, y_p], feed_dict={x:test_x, y:test_y, dropout1 : 1,dropout2 : 1})
     print "validation accuracy:", val_accuracy
     y_true = np.argmax(test_y,1)
-    print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
-    print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
-    print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
-    #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
-    print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
-    print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
-    print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
-    #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
-    print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
-    print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
-    print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
-    if dataset=="dap":
-        print "f1_score",metrics.f1_score(y_true, y_pred)
+    # print "Precision,micro", metrics.precision_score(y_true, y_pred,average="micro")
+    # print "Precision,macro", metrics.precision_score(y_true, y_pred,average="macro")
+    # print "Precision,weighted", metrics.precision_score(y_true, y_pred,average="weighted")
+    # #print "Precision,samples", metrics.precision_score(y_true, y_pred,average="samples")
+    # print "Recall_micro", metrics.recall_score(y_true, y_pred, average="micro")
+    # print "Recall_macro", metrics.recall_score(y_true, y_pred, average="macro")
+    # print "Recall_weighted", metrics.recall_score(y_true, y_pred, average="weighted")
+    # #print "Recall_samples", metrics.recall_score(y_true, y_pred, average="samples")
+    # print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
+    # print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+    # print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    if dataset=="opp" or dataset == "pa2" :
+        #print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+        # print "f1_score_per_class", metrics.f1_score(y_true, y_pred, average=None)
+    elif dataset=="dap":
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+    elif dataset=="sph":
+        print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+    else:
+        print "wrong dataset"
+
+    # plt.figure(1)
+    # plt.plot(loss_over_time)
+    # plt.title("Loss value over epochs (DNN DG)")
+    # plt.xlabel("Epoch")
+    # plt.ylabel("Loss")
+    # plt.show()
+
+    # print "f1_score_micro", metrics.f1_score(y_true, y_pred, average="micro")
+    # print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+    # print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    # if dataset=="dap":
+    #     print "f1_score_", metrics.f1_score(y_true, y_pred)
+    #print "f1_score_samples", metrics.f1_score(y_true, y_pred, average="samples")
     print "confusion_matrix"
     print metrics.confusion_matrix(y_true, y_pred)
-    # # Test model
-    # correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-    # # Calculate accuracy
-    # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-    # print("Accuracy:", accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
+    #fpr, tpr, tresholds = metrics.roc_curve(y_true, y_pred)
 
     #######################################################################################
     #### micro- macro- weighted explanation ###############################################
