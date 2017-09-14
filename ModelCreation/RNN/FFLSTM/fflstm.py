@@ -1,7 +1,9 @@
-"""Human activity recognition using smartphones dataset and an LSTM RNN."""
+## WE USE THE HIGHER LEVEL TENSORFLOW LIBRARY CALLED TF.CONTRIB WHICH HAS AN LSTM CELL
+## IMPLEMENTED. ALSO, A SOFTWARE TEMPLATE COMING WITH MIT LICENCE FOR 1 LAYER MNIST DATASET
+## IMPLEMENTATION WAS USED AS AN INITIAL TEMPLATE
+
 
 # https://github.com/guillaume-chevalier/LSTM-Human-Activity-Recognition
-
 # The MIT License (MIT)
 #
 # Copyright (c) 2016 Guillaume Chevalier
@@ -24,14 +26,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Also thanks to Zhao Yu for converting the ".ipynb" notebook to this ".py"
-# file which I continued to maintain.
-
-# Note that the dataset must be already downloaded for this script to work.
-# To download the dataset, do:
-#     $ cd data/
-#     $ python download_dataset.py
-
 
 import tensorflow as tf
 import numpy as np
@@ -42,7 +36,8 @@ from scipy import stats
 import h5py
 import os
 import sys
-
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 # def feature_normalize(dataset):
 #     mu = np.mean(dataset,axis = 0)
 #     sigma = np.std(dataset,axis = 0)
@@ -103,7 +98,19 @@ def segment_pa2(x_train,y_train,window_size):
             i_label+=1
             i_segment+=1
     return segments, labels
-
+def segment_sph(x_train,y_train,window_size):
+    segments = np.zeros(((len(x_train)//(window_size//2))-1,window_size,52))
+    labels = np.zeros(((len(y_train)//(window_size//2))-1))
+    i_segment = 0
+    i_label = 0
+    for (start,end) in windowz(x_train,window_size):
+        if(len(x_train[start:end]) == window_size):
+            m = stats.mode(y_train[start:end])
+            segments[i_segment] = x_train[start:end]
+            labels[i_label] = m[0]
+            i_label+=1
+            i_segment+=1
+    return segments, labels
 
 class Config(object):
     """
@@ -144,8 +151,8 @@ class Config(object):
             print "sph"
             self.input_height = 1
             self.input_width = input_width #or 90 for actitracker
-            self.num_labels = 18  #or 6 for actitracker
-            self.num_channels = 77 #or 3 for actitracker
+            self.num_labels = 20  #or 6 for actitracker
+            self.num_channels = 52 #or 3 for actitracker
         else:
             print "wrong dataset"
         
@@ -171,53 +178,22 @@ class Config(object):
 
 
 def LSTM_Network(_X, config):
-    """Function returns a TensorFlow RNN with two stacked LSTM cells
-
-    Two LSTM cells are stacked which adds deepness to the neural network.
-    Note, some code of this notebook is inspired from an slightly different
-    RNN architecture used on another dataset, some of the credits goes to
-    "aymericdamien".
-
-    Args:
-        _X:     ndarray feature matrix, shape: [batch_size, time_steps, n_inputs]
-        config: Config for the neural network.
-
-    Returns:
-        This is a description of what is returned.
-
-    Raises:
-        KeyError: Raises an exception.
-
-      Args:
-        feature_mat: ndarray fature matrix, shape=[batch_size,time_steps,n_inputs]
-        config: class containing config of network
-      return:
-              : matrix  output shape [batch_size,n_classes]
-    """
-    # (NOTE: This step could be greatly optimised by shaping the dataset once
-    # input shape: (batch_size, n_steps, n_input)
-    # _X = tf.transpose(_X, [1, 0, 2])  # permute n_steps and batch_size
-    print "_X.shape",_X.shape
     _X = tf.transpose(_X, [1, 0, 2])  # permute n_steps and batch_size
-    # Reshape to prepare input to hidden activation
     _X = tf.reshape(_X, [-1, config.n_inputs])
-    # new shape: (n_steps*batch_size, n_input)
 
     # Linear activation
     _X = tf.nn.relu(tf.matmul(_X, config.W['hidden']) + config.biases['hidden'])
     # Split data because rnn cell needs a list of inputs for the RNN inner loop
     _X = tf.split(_X, config.n_steps, 0)
 
-    # Define two stacked LSTM cells (two recurrent layers deep) with tensorflow
     lstm_cell_1 = tf.contrib.rnn.BasicLSTMCell(config.n_hidden, forget_bias=0.5, state_is_tuple=True)
     lstm_cell_2 = tf.contrib.rnn.BasicLSTMCell(config.n_hidden, forget_bias=0.5, state_is_tuple=True)
     # lstm_cell_3 = tf.contrib.rnn.BasicLSTMCell(config.n_hidden, forget_bias=0.5, state_is_tuple=True)
+    # lstm_cells = tf.contrib.rnn.MultiRNNCell([lstm_cell_1, lstm_cell_2,lstm_cell_3], state_is_tuple=True)
     lstm_cells = tf.contrib.rnn.MultiRNNCell([lstm_cell_1, lstm_cell_2], state_is_tuple=True)
     # Get LSTM cell output
     outputs, states = tf.contrib.rnn.static_rnn(lstm_cells, _X, dtype=tf.float32)
 
-    # Get last time step's output feature for a "many to one" style classifier,
-    # as in the image describing RNNs at the top of this page
     lstm_last_output = outputs[-1]
 
     # Linear activation
@@ -225,10 +201,6 @@ def LSTM_Network(_X, config):
 
 
 
-
-# -----------------------------
-# Step 1: load and prepare data
-# -----------------------------
 
 print "starting..."
 start_time = time.time()
@@ -250,7 +222,7 @@ elif dataset =="dap":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'dataset_fog_release','dataset_fog_release', 'daphnet.h5')
 elif dataset =="pa2":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'PAMAP2_Dataset', 'pamap2.h5')
-elif dataset =="sphere":
+elif dataset =="sph":
     path = os.path.join(os.path.expanduser('~'), 'Downloads', 'SphereDataset', 'sphere.h5')
 else:
     print "Dataset not supported yet"
@@ -319,6 +291,11 @@ elif dataset =="pa2":
     print "signal segmented."
 elif dataset =="sph":
     print "sph seg"
+    input_width = 25
+    print "segmenting signal..."
+    train_x, train_y = segment_sph(x_train,y_train,input_width)
+    test_x, test_y = segment_sph(x_test,y_test,input_width)
+    print "signal segmented."
 else:
     print "no correct dataset"
     exit(0)
@@ -347,20 +324,7 @@ print "train_y shape(1-hot) =",train_y.shape
 print "test_y shape(1-hot) =",test_y.shape
 
 
-# -----------------------------------
-# Step 2: define parameters for model
-# -----------------------------------
-
 config = Config(train_x, test_x, dataset, input_width)
-print("Some useful info to get an insight on dataset's shape and normalisation:")
-print("features shape, labels shape, each features mean, each features standard deviation")
-print(test_x.shape, test_y.shape,
-      np.mean(test_x), np.std(test_x))
-print("the dataset is therefore properly normalised, as expected.")
-
-# ------------------------------------------------------
-# Step 3: Let's get serious and build the neural network
-# ------------------------------------------------------
 
 X = tf.placeholder(tf.float32, [None, config.n_steps, config.n_inputs])
 Y = tf.placeholder(tf.float32, [None, config.n_classes])
@@ -373,19 +337,17 @@ l2 = config.lambda_loss_amount * \
 # Softmax loss and L2
 cost = tf.reduce_mean(
     tf.nn.softmax_cross_entropy_with_logits(labels=Y, logits=pred_Y)) #+ l2
-optimizer = tf.train.AdagradOptimizer(
-    learning_rate=config.learning_rate).minimize(cost)
-# optimizer = tf.train.AdamOptimizer(
+# optimizer = tf.train.AdagradOptimizer(
 #     learning_rate=config.learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(
+    learning_rate=config.learning_rate).minimize(cost)
 
 correct_pred = tf.equal(tf.argmax(pred_Y, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, dtype=tf.float32))
 
-# # --------------------------------------------
-# # Step 4: Hooray, now train the neural network
-# # --------------------------------------------
 
-training_epochs = 1000
+training_epochs = 200
+loss_over_time = np.zeros(training_epochs)
 total_batches = train_x.shape[0] // config.batch_size
 b = 0
 # Launch the graph
@@ -406,6 +368,7 @@ with tf.Session() as sess:
 
             _, c = sess.run([optimizer, cost],feed_dict={X: batch_x, Y : batch_y})
             cost_history = np.append(cost_history,c)
+        loss_over_time[epoch] = np.mean(cost_history)
         print "Epoch: ",epoch," Training Loss: ",np.mean(cost_history)," Training Accuracy: ",sess.run(accuracy, feed_dict={X: train_x, Y: train_y})
     print "Testing Accuracy:", sess.run(accuracy, feed_dict={X: test_x, Y: test_y})
 
@@ -428,17 +391,31 @@ with tf.Session() as sess:
     # print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
     # print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
     #print "f1_score_samples", metrics.f1_score(y_true, y_pred, average="samples")
-    if dataset=="opp" or dataset == "pa2" or dataset =="sph":
-        print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
-        print "f1_score_weighted", metrics.f1_score(y_true, y_pred, average="weighted")
+    if dataset=="opp" or dataset == "pa2" :
+        #print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+        # print "f1_score_per_class", metrics.f1_score(y_true, y_pred, average=None)
     elif dataset=="dap":
-        print "f1_score_macro", metrics.f1_score(y_true, y_pred, average="macro")
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
+    elif dataset=="sph":
+        print "f1_score_mean", metrics.f1_score(y_true, y_pred, average="micro")
+        print "f1_score_w", metrics.f1_score(y_true, y_pred, average="weighted")
+        
+        print "f1_score_m", metrics.f1_score(y_true, y_pred, average="macro")
     else:
         print "wrong dataset"
     # if dataset=="dap":
     #     print "f1_score",metrics.f1_score(y_true, y_pred)
     print "confusion_matrix"
     print metrics.confusion_matrix(y_true, y_pred)
+    # plt.figure(1)
+    # plt.plot(loss_over_time)
+    # plt.title("Loss value over epochs (FFLSTM DG)")
+    # plt.xlabel("Epoch")
+    # plt.ylabel("Loss")
+    # plt.show()
 
 #######################################################################################
 #### micro- macro- weighted explanation ###############################################
